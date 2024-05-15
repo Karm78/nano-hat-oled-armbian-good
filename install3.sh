@@ -6,12 +6,13 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # Get dependencies from APT
-apt -y install libjpeg-dev libfreetype6-dev git python3 python3-dev \
-  python3-pip python3-setuptools python3-smbus python3-wheel ttf-dejavu \
-  zlib1g-dev
-
-# Install image and pillow
-pip3 install image pillow
+apt -y install \
+  git \
+  python3 \
+  python3-libgpiod \
+  python3-pil \
+  python3-smbus \
+  ttf-dejavu
 
 # Get the code
 if [ -d "/tmp/nano-hat-oled-armbian" ]
