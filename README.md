@@ -1,4 +1,4 @@
-# NanoHAT OLED for Armbian - Python3 RC
+# NanoHAT OLED for Armbian - Python3
 NanoHAT OLED and GPIO Button Control for Armbian. This documentation contains installation and upgrade instructions.
 
 ## Disclaimer
@@ -15,36 +15,39 @@ THE SOFTWARE.
 
 ### Prerequisites
 
+This guide assumes you are using Armbian Bookworm. If you know what you're doing, this program can work on other releases too.
+
 Enable i2c0:
 ```
-sudo apt update
-sudo apt -y install armbian-config
-sudo armbian config
+sudo nano /boot/armbianEnv.txt
 ```
-Select `System`, `Hardware`, mark `i2c0` and `Save`. Reboot the system for the changes to take effect.
+Add `i2c0` to the `overlays=` line, for example if the line appears as follows:
+```
+overlays=usbhost1 usbhost2
+```
+Then add `i2c0` with a space seperating it from the other values:
+```
+overlays=i2c0 usbhost1 usbhost2
+```
+Save these changes by pressing `ctrl+x`, `ctrl+y` and `enter` as prompted at the bottom of the screen.  
+    
+Reboot the system for the changes to take effect:
+```
+sudo reboot now
+```
 
 ### Dependencies
 Install the dependences from APT:
 ```
 sudo apt -y install \
-  libjpeg-dev \
-  libfreetype6-dev \
   git \
   python3 \
-  python3-dev \
-  python3-pip \
-  python3-setuptools \
+  python3-libgpiod \
+  python3-pil \
   python3-smbus \
-  python3-wheel \
-  ttf-dejavu \
-  zlib1g-dev
+  ttf-dejavu
 ```
-And install `image` and `pillow` from PIP:
-```
-sudo pip3 install \
-  image \
-  pillow
-```
+
 ### Get the Code
 Clone from GitHub:
 ```
@@ -169,28 +172,9 @@ sudo reboot now
 
 ## Appendix
 
-### Enable i2c0 through /boot/armbianEnv.txt
-```
-sudo nano /boot/armbianEnv.txt
-```
-Add `i2c0` to the `overlays=` line, for example if the line appears as follows:
-```
-overlays=usbhost1 usbhost2
-```
-Then add `i2c0` with a space seperating it from the other values:
-```
-overlays=i2c0 usbhost1 usbhost2
-```
-Save these changes by pressing `ctrl+x`, `ctrl+y` and `enter` as prompted at the bottom of the screen.  
-    
-Reboot the system for the changes to take effect:
-```
-sudo reboot now
-```
-
 ### Experimental Quick Install and Update
    
-Enable the i2c0 either using `armbian-config` or changing `/boot/armbianEnv.txt` and reboot.   
+Enable the i2c0 by changing `/boot/armbianEnv.txt` and reboot.   
    
 After reboot, run the following command:
 ```
