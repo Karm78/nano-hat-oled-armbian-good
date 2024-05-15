@@ -21,6 +21,7 @@ THE SOFTWARE.
 """
 
 from PIL import Image, ImageDraw, ImageFont
+import gpiod
 import os
 import smbus
 import subprocess
@@ -69,18 +70,15 @@ def write_i2c_image_data(i2c_bus, image):
 
 try:
 
-  with open("/sys/class/gpio/export", "w") as file:
-    file.write("0\n")  # initialise GPIO 0 (key1)
-  with open("/sys/class/gpio/export", "w") as file:
-    file.write("2\n")  # initialise GPIO 2 (key2)
-  with open("/sys/class/gpio/export", "w") as file:
-    file.write("3\n")  # initialise GPIO 3 (key3)
-  with open("/sys/class/gpio/gpio0/direction", "w") as file:
-    file.write("in\n")
-  with open("/sys/class/gpio/gpio2/direction", "w") as file:
-    file.write("in\n")
-  with open("/sys/class/gpio/gpio3/direction", "w") as file:
-    file.write("in\n")
+  chip = gpiod.Chip("gpiochip1")
+
+  gpio_line0 = chip.get_line(0)
+  gpio_line2 = chip.get_line(2)
+  gpio_line3 = chip.get_line(3)
+
+  gpio_line0.request("p_gpio", gpiod.LINE_REQ_DIR_IN, gpiod.LINE_REQ_FLAG_BIAS_DISABLE)
+  gpio_line2.request("p_gpio", gpiod.LINE_REQ_DIR_IN, gpiod.LINE_REQ_FLAG_BIAS_DISABLE)
+  gpio_line3.request("p_gpio", gpiod.LINE_REQ_DIR_IN, gpiod.LINE_REQ_FLAG_BIAS_DISABLE)
 
   i2c0_bus.write_i2c_block_data(
     0x3C,
@@ -119,24 +117,25 @@ try:
   while True:
     time.sleep(0.025)
     current_time = time.time()
-    with open("/sys/class/gpio/gpio0/value") as file:  # poll key1 down
-      if file.read(1) == "1":
-        cmd_index = key1_cmd_index
-        display_refresh_time = 0
-        display_off_time = current_time + DISPLAY_OFF_TIMEOUT
-        continue
-    with open("/sys/class/gpio/gpio2/value") as file:  # poll key2 down
-      if file.read(1) == "1":
-        cmd_index = key2_cmd_index
-        display_refresh_time = 0
-        display_off_time = current_time + DISPLAY_OFF_TIMEOUT
-        continue
-    with open("/sys/class/gpio/gpio3/value") as file:  # poll key3 down
-      if file.read(1) == "1":
-        cmd_index = key3_cmd_index
-        display_refresh_time = 0
-        display_off_time = current_time + DISPLAY_OFF_TIMEOUT
-        continue
+    button_f1 = gpio_line0.get_value()
+    button_f2 = gpio_line2.get_value()
+    button_f3 = gpio_line3.get_value()
+
+    if button_f1:
+      cmd_index = key1_cmd_index
+      display_refresh_time = 0
+      display_off_time = current_time + DISPLAY_OFF_TIMEOUT
+      continue
+    if button_f2:
+      cmd_index = key2_cmd_index
+      display_refresh_time = 0
+      display_off_time = current_time + DISPLAY_OFF_TIMEOUT
+      continue
+    if button_f3:
+      cmd_index = key3_cmd_index
+      display_refresh_time = 0
+      display_off_time = current_time + DISPLAY_OFF_TIMEOUT
+      continue
     if current_time > display_off_time:
       i2c0_bus.write_i2c_block_data(0x3C, 0x00, [0xAE])  # set display off
       continue
@@ -234,12 +233,12 @@ except KeyboardInterrupt:
 finally:
 
   i2c0_bus.write_i2c_block_data(0x3C, 0x00, [0xAE])  # set display off
-  with open("/sys/class/gpio/unexport", "w") as file:
-    file.write("0\n")  # release GPIO 0 (key1)
-  with open("/sys/class/gpio/unexport", "w") as file:
-    file.write("2\n")  # release GPIO 2 (key2)
-  with open("/sys/class/gpio/unexport", "w") as file:
-    file.write("3\n")  # release GPIO 3 (key3)
+  
+  gpio_line0.release()
+  gpio_line2.release()
+  gpio_line3.release()
+
+  chip.close()
 
   if cmd_index == 99:  # shutdown now if the command index was 99
     os.system("shutdown now")
