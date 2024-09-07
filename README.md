@@ -15,6 +15,10 @@ THE SOFTWARE.
 
 ### Prerequisites
 
+### This is a fork from the original project : https://github.com/crouchingtigerhiddenadam/nano-hat-oled-armbian
+Was 2 mistake, this \ left in python code and change package tts-dejavu by the newest -> fonts-dejavu
+
+
 This guide assumes you are using Armbian Bookworm. If you know what you're doing, this program can work on other releases too.
 
 Enable i2c0:
@@ -52,7 +56,7 @@ sudo apt -y install \
 Clone from GitHub:
 ```
 cd /tmp
-git clone https://github.com/crouchingtigerhiddenadam/nano-hat-oled-armbian
+git clone https://github.com/Karm78/nano-hat-oled-armbian-good/
 ```
 
 Run the code (optional):
@@ -179,7 +183,7 @@ Enable the i2c0 by changing `/boot/armbianEnv.txt` and reboot.
 After reboot, run the following command:
 ```
 sudo wget -O - \
-  https://raw.githubusercontent.com/crouchingtigerhiddenadam/nano-hat-oled-armbian/primary/install3.sh | \
+  https://raw.githubusercontent.com/Karm78/nano-hat-oled-armbian-good/blob/primary/install3.sh | \
   sudo bash -
 ```
 The command can be used to make a fresh installation or update an existing installation to the latest version.
