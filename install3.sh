@@ -6,13 +6,7 @@ if [ "$EUID" -ne 0 ]
 fi
 
 # Get dependencies from APT
-apt -y install \
-  git \
-  python3 \
-  python3-libgpiod \
-  python3-pil \
-  python3-smbus \
-  fonts-dejavu
+apt -y install git python3 python3-libgpiod python3-pil python3-smbus fonts-dejavu
 
 # Get the code
 if [ -d "/tmp/nano-hat-oled-armbian" ]
