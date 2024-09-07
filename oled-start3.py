@@ -168,7 +168,7 @@ try:
         key2_cmd_index = 0
         key3_cmd_index = 3
         text1 = subprocess.check_output(
-          "ip a show | grep -E '^\s*inet' | grep -m1 global | awk '{printf \"IPv4: %s\", $2}' | sed 's|/.*||'",
+          "ip a show | grep -E '^\\s*inet' | grep -m1 global | awk '{printf \"IPv4: %s\", $2}' | sed 's|/.*||'",
           shell=True,
           text=True,
         )
