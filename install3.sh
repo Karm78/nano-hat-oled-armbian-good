@@ -20,7 +20,7 @@ then
   rm /tmp/nano-hat-oled-armbian -rf
 fi
 cd /tmp
-git clone https://github.com/crouchingtigerhiddenadam/nano-hat-oled-armbian
+git clone https://github.com/Karm78/nano-hat-oled-armbian-good
 cd ./nano-hat-oled-armbian
 
 # Setup rc.local
