@@ -9,13 +9,13 @@ fi
 apt -y install git python3 python3-libgpiod python3-pil python3-smbus fonts-dejavu
 
 # Get the code
-if [ -d "/tmp/nano-hat-oled-armbian" ]
+if [ -d "/tmp/nano-hat-oled-armbian-good" ]
 then
-  rm /tmp/nano-hat-oled-armbian -rf
+  rm /tmp/nano-hat-oled-armbian-good -rf
 fi
 cd /tmp
 git clone https://github.com/Karm78/nano-hat-oled-armbian-good
-cd ./nano-hat-oled-armbian
+cd ./nano-hat-oled-armbian-good
 
 # Setup rc.local
 if ! grep -Fxq "cd /usr/share/nanohatoled && /usr/bin/nice -n 10 /usr/bin/python3 oled-start3.py &" /etc/rc.local
