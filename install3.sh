@@ -37,7 +37,7 @@ mv splash.png /usr/share/nanohatoled/
 cd /usr/share/nanohatoled/
 
 # Compile the code
-python3 -O -m py_compile oled-start3.py
+sudo python3 -O -m py_compile oled-start3.py
 
 # Start OLED
 /usr/bin/nice -n 10 /usr/bin/python3 oled-start3.py &
